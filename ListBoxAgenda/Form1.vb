@@ -24,10 +24,15 @@
     Sub reservarAgenda()
         Dim Message As String = "¿Cuantos contactos va a ingresar?"
         Me.cantContactos = Val(InputBox(Message, "Ingresar", "5")) - 1
-        'ReDimension de la agenda de 0 a cantContactos
-        ReDim MiAgenda(cantContactos)
-        'Reservado (cantContactos) + 1 espacios
-        'Por ese motivo resto -1 en el InputBox
+        If cantContactos < 0 Then
+            End
+        Else
+            'ReDimension de la agenda de 0 a cantContactos
+            ReDim MiAgenda(cantContactos)
+            'Reservado (cantContactos) + 1 espacios
+            'Por ese motivo resto -1 en el InputBox
+        End If
+
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAgregar.Click
@@ -57,16 +62,24 @@
     End Sub
 
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
+        Dim b As Integer
         Dim n As Integer = ListBoxAgenda.SelectedIndex
-        ListBoxAgenda.Items.RemoveAt(n)
 
-        For i = n To totalRegistros - 2
-            MiAgenda(i).nombre = MiAgenda(i + 1).nombre
-            MiAgenda(i).telefono = MiAgenda(i + 1).telefono
-            MiAgenda(i).email = MiAgenda(i + 1).email
-        Next i
+        If n > -1 Then
+            b = MsgBox("Eliminar Registro: " + MiAgenda(n).nombre, 3 + 32, "Eliminar")
+            If b = 6 Then
+                ListBoxAgenda.Items.RemoveAt(n)
 
-        totalRegistros -= 1
+                For i = n To totalRegistros - 2
+                    MiAgenda(i).nombre = MiAgenda(i + 1).nombre
+                    MiAgenda(i).telefono = MiAgenda(i + 1).telefono
+                    MiAgenda(i).email = MiAgenda(i + 1).email
+                Next i
+                totalRegistros -= 1
+            End If
+        Else
+            MsgBox("No hay item a eliminar", 16, "Error")
+        End If
     End Sub
 
     Private Sub btnVer_Click(sender As Object, e As EventArgs) Handles btnVer.Click
